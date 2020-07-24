@@ -169,5 +169,5 @@ if __name__ == '__main__':
 
     for i_obj in range(len(obj_list)):
         print('####################{}####################'.format(obj_list[i_obj]))
-        _eval(coco_gt, image_ids, f'{SET_NAME}_bbox_results.json', i_obj)
+        _eval(coco_gt, image_ids, f'{SET_NAME}_bbox_results.json', i_obj + 1)  # catIds start from 1
         print('########################################')
