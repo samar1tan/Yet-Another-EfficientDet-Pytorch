@@ -37,7 +37,10 @@ args = ap.parse_args()
 
 compound_coef = args.compound_coef
 nms_threshold = args.nms_threshold
+
 use_cuda = args.cuda
+# use_cuda = False
+
 gpu = args.device
 use_float16 = args.float16
 override_prev_results = args.override
@@ -122,13 +125,14 @@ def evaluate_coco(img_path, set_name, image_ids, coco, model, threshold=0.05):
     json.dump(results, open(filepath, 'w'), indent=4)
 
 
-def _eval(coco_gt, image_ids, pred_json_path):
+def _eval(coco_gt, image_ids, pred_json_path, catId):
     # load results in COCO evaluation tool
     coco_pred = coco_gt.loadRes(pred_json_path)
 
     # run COCO evaluation
     print('BBox')
     coco_eval = COCOeval(coco_gt, coco_pred, 'bbox')
+    coco_eval.params.catIds = [catId]
     coco_eval.params.imgIds = image_ids
     coco_eval.evaluate()
     coco_eval.accumulate()
@@ -158,4 +162,12 @@ if __name__ == '__main__':
 
         evaluate_coco(VAL_IMGS, SET_NAME, image_ids, coco_gt, model)
 
-    _eval(coco_gt, image_ids, f'{SET_NAME}_bbox_results.json')
+    obj_list = ['apple', 'banana', 'bean', 'beer', 'bread', 'broccoli', 'bun', 'cheese', 'coffee', 'cola', 'doughnut',
+               'egg', 'fired_dough_twist', 'grape', 'jerky', 'juice', 'lemon', 'litchi', 'mango', 'milk', 'mooncake',
+               'nut', 'onion', 'orange', 'pasta', 'peach', 'pear', 'pepper', 'plum', 'qiwi', 'sachima', 'sauce',
+               'tomato', 'waffle', 'watermelon', 'wine', 'coin']
+
+    for i_obj in range(len(obj_list)):
+        print('####################{}####################'.format(obj_list[i_obj]))
+        _eval(coco_gt, image_ids, f'{SET_NAME}_bbox_results.json', i_obj)
+        print('########################################')
