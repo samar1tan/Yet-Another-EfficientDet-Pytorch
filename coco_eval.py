@@ -29,7 +29,7 @@ ap.add_argument('-p', '--project', type=str, default='coco', help='project file 
 ap.add_argument('-c', '--compound_coef', type=int, default=0, help='coefficients of efficientdet')
 ap.add_argument('-w', '--weights', type=str, default=None, help='/path/to/weights')
 ap.add_argument('--nms_threshold', type=float, default=0.5, help='nms threshold, don\'t change it if not for testing purposes')
-ap.add_argument('--cuda', type=bool, default=True)
+ap.add_argument('--cuda', type=str)
 ap.add_argument('--device', type=int, default=0)
 ap.add_argument('--float16', type=bool, default=False)
 ap.add_argument('--override', type=bool, default=True, help='override previous bbox results file if exists')
@@ -39,7 +39,10 @@ compound_coef = args.compound_coef
 nms_threshold = args.nms_threshold
 
 use_cuda = args.cuda
-# use_cuda = False
+if use_cuda == 'False' or '0' or 'false':
+    use_cuda = False
+else:
+    use_cuda = True
 
 gpu = args.device
 use_float16 = args.float16
